@@ -1,0 +1,102 @@
+:root{
+  --ink:#f4eefc; --dim:#b9b0cc; --lav:#b9a3e8; --lav-d:#7d68b8; --cyan:#8ff3ff;
+  --warm:#ffcf8a; --panel:rgba(18,14,34,.72); --line:rgba(185,163,232,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#05040c;color:var(--ink);
+  font-family:"Nunito",system-ui,sans-serif}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block}
+#ui{position:fixed;inset:0;pointer-events:none}
+#ui *{pointer-events:auto}
+#fade{position:fixed;inset:0;background:#000;opacity:1;pointer-events:none;transition:opacity 1.2s ease}
+#sound{position:fixed;right:16px;top:14px;font-size:20px;cursor:pointer;opacity:.6;user-select:none;z-index:5}
+#sound:hover{opacity:1}
+
+/* Title */
+.title-wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:11vh !important;
+  text-align:center;pointer-events:none;padding:0 16px}
+.title{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;
+  font-size:clamp(34px,6vw,76px);letter-spacing:.01em;text-shadow:0 0 30px rgba(185,163,232,.45);
+  opacity:0;animation:rise 2.4s ease .6s forwards}
+.subtitle{color:var(--dim);margin-top:10px;font-size:clamp(13px,1.6vw,17px);letter-spacing:.2em;text-transform:uppercase;
+  opacity:0;animation:rise 2s ease 1.6s forwards}
+.title-wrap .btn{position:absolute;bottom:12vh;opacity:0;animation:rise 1.6s ease 2.6s forwards;pointer-events:auto}
+
+.btn{font:800 16px "Nunito",sans-serif;color:#120d22;background:linear-gradient(180deg,#d9cbff,#a993e6);
+  border:none;border-radius:999px;padding:13px 30px;cursor:pointer;letter-spacing:.03em;
+  box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 6px 26px rgba(150,120,230,.45);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.35) inset,0 10px 34px rgba(150,120,230,.65)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:0 0 0 1.5px var(--line) inset}
+
+/* Dialogue */
+.dialog{position:absolute;left:50%;bottom:7vh;transform:translateX(-50%);max-width:min(640px,92vw);
+  background:var(--panel);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:18px;
+  padding:16px 22px;font-size:18px;line-height:1.5;text-align:center;cursor:pointer;
+  animation:rise .6s ease both}
+.dialog .who{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--lav);margin-bottom:4px}
+.dialog .next{display:block;font-size:12px;color:var(--dim);margin-top:6px;opacity:.7}
+.caption{position:absolute;left:50%;top:9vh;transform:translateX(-50%);font-family:"Cormorant Garamond",serif;
+  font-style:italic;font-size:clamp(20px,2.6vw,30px);color:var(--ink);text-align:center;width:92vw;
+  text-shadow:0 0 18px rgba(0,0,0,.8);animation:rise 1.2s ease both}
+
+/* HUD */
+.hud{position:absolute;left:16px;top:14px;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:15px;
+  text-shadow:0 1px 6px #000}
+.hint{position:absolute;left:50%;bottom:4vh;transform:translateX(-50%);color:var(--dim);font-size:14px;text-align:center;
+  text-shadow:0 1px 6px #000;width:92vw}
+.hotspot{position:absolute;transform:translate(-50%,-50%);padding:8px 14px;border-radius:999px;background:var(--panel);
+  border:1px solid var(--lav);font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;
+  animation:pulse 1.8s ease-in-out infinite}
+
+/* Panels (hangar) */
+.panel{position:absolute;right:3vw;top:50%;transform:translateY(-50%);width:min(380px,92vw);
+  background:var(--panel);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:20px;
+  animation:rise .7s ease both}
+.panel h2{font-size:18px;margin-bottom:4px}
+.panel .sub{color:var(--dim);font-size:13px;margin-bottom:14px}
+.bar{margin:6px 0 12px}
+.bar label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px}
+.bar .track{height:9px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar .fill{height:100%;border-radius:9px;transition:width .35s ease,background .35s}
+.opt{margin:10px 0}
+.opt .name{font-size:13px;font-weight:800;margin-bottom:6px}
+.opt .row{display:flex;gap:6px}
+.chip{flex:1;font:700 12.5px "Nunito",system-ui,sans-serif;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid var(--line);
+  border-radius:10px;padding:7px 4px;cursor:pointer;text-align:center;line-height:1.25}
+.chip small{display:block;color:var(--dim);font-weight:400;font-size:11px}
+.chip.on{background:rgba(185,163,232,.28);border-color:var(--lav)}
+.panel .btn{width:100%;margin-top:10px}
+.msg{font-size:13px;margin-top:10px;min-height:18px;color:var(--warm);text-align:center}
+
+/* Photo / letter */
+.photo{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-2deg);background:#f3eee6;
+  padding:14px 14px 46px;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.7);animation:develop 1.6s ease both;
+  width:min(380px,80vw)}
+.photo img,.photo canvas{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:#000}
+.photo .cap{position:absolute;left:0;right:0;bottom:12px;text-align:center;color:#3a3346;
+  font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px}
+.credit{position:absolute;left:50%;bottom:2.5vh;transform:translateX(-50%);font-size:12px;color:var(--dim);text-align:center;width:92vw}
+.letter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(460px,88vw);aspect-ratio:1.5;
+  background:radial-gradient(ellipse at 50% 40%,#d9b98a,#8a6440);border-radius:10px;
+  box-shadow:0 0 0 6px #4a3322 inset,0 30px 80px rgba(0,0,0,.8),0 0 60px rgba(255,190,110,.25);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2b1a0e;
+  font-family:"Cormorant Garamond",serif;font-style:italic;animation:develop 2.4s ease both}
+.letter p{font-size:clamp(26px,4vw,38px);text-align:center;line-height:1.15}
+.letter .sig{align-self:flex-end;margin-right:12%;margin-top:12px;font-size:clamp(20px,3vw,28px)}
+.end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:0 16px}
+
+@keyframes rise{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(185,163,232,.6)}50%{box-shadow:0 0 0 10px rgba(185,163,232,0)}}
+@keyframes develop{from{opacity:0;filter:brightness(3) blur(6px)}to{opacity:1;filter:none}}
+@media (max-width:700px){.panel{right:50%;transform:translate(50%,-50%);top:auto;bottom:2vh;transform:translateX(50%)}}
+
+.langs{position:absolute;top:16px;left:16px;display:flex;gap:6px;pointer-events:auto}
+.langs button{font:800 13px "Nunito",system-ui,sans-serif;color:var(--dim);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.langs button.on{color:#120d22;background:var(--lav);border-color:var(--lav)}
+.credits{position:absolute;inset:0;background:#000;overflow:hidden;pointer-events:none}
+.credits .roll{position:absolute;left:0;right:0;top:100%;text-align:center;display:flex;flex-direction:column;gap:46px;padding:0 16px;
+  animation:roll 26s linear forwards}
+.credits h3{font:400 13px "Nunito",sans-serif;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+.credits p{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(20px,2.6vw,28px);line-height:1.4;color:var(--ink)}
+.credits .big{font-style:italic;font-size:clamp(30px,5vw,56px)}
+@keyframes roll{from{transform:translateY(0)}to{transform:translateY(calc(-100% - 100vh))}}
