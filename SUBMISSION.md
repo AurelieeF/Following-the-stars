@@ -65,13 +65,26 @@ None.
 - Astronaut design: Blender model by Lily **[TO CONFIRM]**
 
 ## Use of Artificial Intelligence
-**[TO CONFIRM — check against AI_USAGE.md]**
-- Code: written with help from an AI assistant (Claude, by Anthropic). I directed it, tested it and reviewed it.
-- Game text (French and English dialogue): written with Claude from my story, characters and direction, then reviewed by me.
-- Storyboard images and astronaut reference images: made with an AI image tool **[TO CONFIRM: which tool]**. They have a visible "AI-generated" watermark.
-- The story, the characters, the ending and all the final creative choices are mine.
-- The NASA photos are real NASA data, not AI-generated.
-- AI use is also mentioned in the game's credits.
+**[TO CONFIRM — Lily: fill in the brackets with what you actually did]**
+
+This project is a mix of my own work and AI help. It's not 100% AI.
+
+What I did:
+- the idea, the story, the characters, the ending and the game design (the two missions, what the player has to choose, the NASA photos as the reward)
+- the astronaut design and my models in Blender **[TO CONFIRM: list them, e.g. astronaut, Earth…]**
+- the first versions of parts of the code **[TO CONFIRM: which parts]**
+- testing every version, deciding what stays and what changes
+
+What the AI (Claude, by Anthropic) did:
+- it suggested building the game for the browser with Three.js, and from there it wrote a big part of the code with me
+- it fixed bugs and smoothed things out (animations, timing, transitions)
+- on the last day it added features I asked for after testing: the mission report and score, team mode, the power and data limits, and the fixes from my playtest
+- it helped write the French and English dialogue from my story, and I reviewed it
+
+Other AI:
+- storyboard and astronaut reference images were made with an AI image tool **[TO CONFIRM: which tool]**, with a visible "AI-generated" watermark
+
+The NASA photos are real NASA data, not AI. AI use is also in the game's credits, and the commits written with AI are marked "Co-Authored-By: Claude" on GitHub.
 
 ## Demo
 Choose ONE: a video of max **30 seconds** (English, or English subtitles) or a slide deck of max **7 slides**.
