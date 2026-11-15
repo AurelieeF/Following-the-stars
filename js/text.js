@@ -17,7 +17,7 @@ export const TEXT = {
     robot_beep: 'Bip… bip ?',
     h_dream: 'J’ai encore rêvé d’elle cette nuit.',
     hs_photo: '🖼️ La photo',
-    hint_photo: 'Clique sur la photo… ou continue',
+    hint_photo: 'Clique sur la photo… ou ESPACE pour continuer',
     h_photo: 'Elle disait toujours qu’un jour, on irait là-haut ensemble.',
     h_leave1: 'Je pars chercher des photos des étoiles.',
     h_leave2: 'Garde la maison. Je te montrerai les photos en rentrant.',
@@ -105,6 +105,7 @@ export const TEXT = {
     photo_earth_on: 'La Terre, le {date}',
     credit_epic: 'Photo réelle : NASA EPIC / satellite DSCOVR',
     credit_lib: 'Photo réelle : NASA Image and Video Library ({id})',
+    earthrise: '« Earthrise » — Apollo 8, 24 décembre 1968',
     credit_fallback: 'Image de secours (pas de connexion à la NASA). En ligne, c’est la vraie photo NASA.',
   },
 
@@ -118,7 +119,7 @@ export const TEXT = {
     robot_beep: 'Beep… beep?',
     h_dream: 'I dreamed about her again last night.',
     hs_photo: '🖼️ The photo',
-    hint_photo: 'Click the photo… or keep going',
+    hint_photo: 'Click the photo… or SPACE to keep going',
     h_photo: 'She always said that one day, we would go up there together.',
     h_leave1: 'I’m going to bring back pictures of the stars.',
     h_leave2: 'Look after the house. I’ll show you the pictures when I’m back.',
@@ -197,6 +198,7 @@ export const TEXT = {
     photo_earth_on: 'The Earth, {date}',
     credit_epic: 'Real photo: NASA EPIC / DSCOVR satellite',
     credit_lib: 'Real photo: NASA Image and Video Library ({id})',
+    earthrise: '“Earthrise” — Apollo 8, December 24, 1968',
     credit_fallback: 'Backup image (no connection to NASA). Online, this is the real NASA photo.',
   },
 };

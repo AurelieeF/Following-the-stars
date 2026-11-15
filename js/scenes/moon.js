@@ -80,7 +80,7 @@ export default {
   },
   async photo() {
     phase = 'photo'; removeEventListener('pointerdown', this._click); this._hint?.remove(); scene.remove(this._ring);
-    const pPromise = libraryPhoto('earthrise apollo 8');
+    const pPromise = libraryPhoto();
     await tween(hero.rotation, { y: Math.atan2(earth.position.x - hero.position.x, earth.position.z - hero.position.z) }, 900, easeInOut);
     const from = camera.position.clone();
     await tween(camera.position, { x: hero.position.x + 2, y: hero.position.y + 2.6, z: hero.position.z + 4 }, 1800, easeInOut);
@@ -105,7 +105,7 @@ export default {
     await wait(1600);
     // seated by the lantern, the box beside him, the two photos on the rock
     sitting = true; box.visible = true; lantern.visible = true;
-    hero.position.copy(SEAT).setY(groundY(SEAT.x, SEAT.z) + 0.38); hero.rotation.y = Math.PI - 0.5; // legs tucked into the rock: he sits
+    hero.position.copy(SEAT).setY(groundY(SEAT.x, SEAT.z) + 0.22); hero.rotation.y = 1.4; // seen in profile, turned to the box; legs hidden by the rock: he sits
     this.makePolaroids();
     camera.position.set(SEAT.x - 1.5, groundY(SEAT.x, SEAT.z) + 2.4, SEAT.z + 8.5);
     camera.lookAt(SEAT.x + 0.5, groundY(SEAT.x, SEAT.z) + 1.6, SEAT.z - 2);
@@ -138,7 +138,7 @@ export default {
       pic.position.set(0, 0.012, -0.06);
       const apply = (tx) => { tx.colorSpace = THREE.SRGBColorSpace; pic.material.map = tx; pic.material.color.set(0xffffff); pic.material.needsUpdate = true; };
       const loader = new THREE.TextureLoader().setCrossOrigin('anonymous');
-      loader.load(ph.url, apply, undefined, () => ph.fallback && loader.load(ph.fallback, apply));
+      loader.load(ph.tex || ph.url, apply, undefined, () => ph.fallback && loader.load(ph.fallback, apply));
       g.add(frame, pic);
       g.position.set(SEAT.x - 0.9 + i * 0.75, groundY(SEAT.x, SEAT.z) + 0.62, SEAT.z + 0.35 + i * 0.15); g.rotation.y = -0.3 + i * 0.4;
       scene.add(g); polaroids.push(g);
@@ -219,12 +219,11 @@ function makeConstellation(cam, seat, gy) {
   const fig = (x, y, s) => {
     c.globalCompositeOperation = 'source-over';
     c.beginPath(); c.arc(x, y, 26 * s, 0, 7); c.fill();                                   // helmet
-    c.beginPath(); c.roundRect(x - 22 * s, y + 30 * s, 44 * s, 46 * s, 16 * s); c.fill();  // body
+    c.beginPath(); c.roundRect(x - 22 * s, y + 20 * s, 44 * s, 56 * s, 16 * s); c.fill();  // body, joined to the helmet so it doesn't read as a halo
     c.beginPath(); c.roundRect(x - 20 * s, y + 72 * s, 16 * s, 24 * s, 7 * s); c.fill();   // legs
     c.beginPath(); c.roundRect(x + 4 * s, y + 72 * s, 16 * s, 24 * s, 7 * s); c.fill();
     c.globalCompositeOperation = 'destination-out';
-    c.beginPath(); c.ellipse(x - 3 * s, y + 1 * s, 17 * s, 15 * s, 0, 0, 7); c.fill();       // visor
-    c.fillRect(x - 30 * s, y + 25 * s, 60 * s, 5 * s);                                       // neck gap
+    c.beginPath(); c.ellipse(x - 5 * s, y - 1 * s, 12 * s, 10 * s, 0, 0, 7); c.fill();       // visor (small, or the helmet reads as a halo)
     c.globalCompositeOperation = 'source-over';
   };
   fig(150, 38, 1.05); fig(84, 74, 0.62);

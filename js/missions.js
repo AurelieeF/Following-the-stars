@@ -29,12 +29,12 @@ export const BASE_MASS = 3;
 export const MISSIONS = {
   1: {
     title: 'm1_title', goal: 'm1_goal',
-    budget: 100, rangeNeeded: 1,
+    budget: 70, rangeNeeded: 1,   // can't have shield + battery + long tether all at once
     flight: { seconds: 32, rate: 1.0, events: ['flare', 'eclipse'] },
   },
   2: {
     title: 'm2_title', goal: 'm2_goal',
-    budget: 110, rangeNeeded: 2,
+    budget: 90, rangeNeeded: 2,   // the big engine fits only if you drop what the Moon doesn't need
     flight: { seconds: 38, rate: 1.5, events: ['flare', 'blackout'] },
   },
 };

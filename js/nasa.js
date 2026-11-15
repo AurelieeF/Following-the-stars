@@ -8,6 +8,9 @@
 import { t, getLang } from './text.js';
 
 const EPIC = 'https://epic.gsfc.nasa.gov';
+// api.nasa.gov serves the same EPIC files WITH CORS headers, so they can become 3D textures.
+// DEMO_KEY is rate-limited per visitor; a free key from https://api.nasa.gov lifts the limit.
+const NASA_KEY = 'DEMO_KEY';
 
 async function getJSON(url, ms = 7000) {
   const ctl = new AbortController();
@@ -29,10 +32,10 @@ function loadImg(url, ms = 9000) {
   });
 }
 
-function epicUrl(item) {
+function epicPath(item) {
   const [d] = item.date.split(' ');
   const [y, m, dd] = d.split('-');
-  return `${EPIC}/archive/natural/${y}/${m}/${dd}/jpg/${item.image}.jpg`;
+  return `/archive/natural/${y}/${m}/${dd}/jpg/${item.image}.jpg`;
 }
 
 const fmt = (d) => new Date(d.replace(' ', 'T') + 'Z').toLocaleDateString(getLang() === 'fr' ? 'fr-CA' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -43,27 +46,27 @@ export async function epicPhoto(date = null) {
     const list = await getJSON(date ? `${EPIC}/api/natural/date/${date}` : `${EPIC}/api/natural`);
     if (!list.length) throw new Error('empty');
     const item = list[Math.floor(list.length / 2)];
-    const url = await loadImg(epicUrl(item));
-    return { url, label: t('photo_earth_on', { date: fmt(item.date) }), credit: t('credit_epic'), real: true };
+    const url = await loadImg(EPIC + epicPath(item));
+    const tex = `https://api.nasa.gov/EPIC${epicPath(item)}?api_key=${NASA_KEY}`;
+    return { url, tex, label: t('photo_earth_on', { date: fmt(item.date) }), credit: t('credit_epic'), real: true };
   } catch {
     return null;
   }
 }
 
-/** A real NASA library photo (default: Earthrise, seen from the Moon by Apollo 8). */
-export async function libraryPhoto(query = 'earthrise apollo 8') {
+/** A real NASA library photo, by its NASA id (default: Apollo 8 "Earthrise", AS08-14-2383).
+ *  A copy of Earthrise ships in assets/ so it can be used as a 3D texture (images-assets.nasa.gov has no CORS). */
+export async function libraryPhoto(id = 'as08-14-2383') {
+  const local = id === 'as08-14-2383' ? './assets/earthrise.jpg' : null;
+  const label = local ? t('earthrise') : null;
   try {
-    const data = await getJSON(`https://images-api.nasa.gov/search?q=${encodeURIComponent(query)}&media_type=image`);
+    const data = await getJSON(`https://images-api.nasa.gov/search?nasa_id=${encodeURIComponent(id)}`);
     const item = data.collection.items.find((i) => i.links?.[0]?.href);
     const url = await loadImg(item.links[0].href.replace(/~thumb\.jpg$/, '~medium.jpg')).catch(() => loadImg(item.links[0].href));
-    const d = item.data[0];
-    return { url, label: d.title, credit: t('credit_lib', { id: d.nasa_id }), real: true };
+    return { url, tex: local || url, label: label || item.data[0].title, credit: t('credit_lib', { id }), real: true };
   } catch {
-    if (query === 'earthrise apollo 8') {
-      // direct link to the Apollo 8 "Earthrise" photo, in case the search API is down
-      const url = 'https://images-assets.nasa.gov/image/as08-14-2383/as08-14-2383~medium.jpg';
-      try { await loadImg(url); return { url, label: 'Earthrise — Apollo 8', credit: t('credit_lib', { id: 'as08-14-2383' }), real: true }; } catch { /* offline */ }
-    }
+    // search API down: use the copy shipped with the game
+    if (local) return { url: local, tex: local, label, credit: t('credit_lib', { id }), real: true };
     return null;
   }
 }

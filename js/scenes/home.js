@@ -125,9 +125,14 @@ export default {
       leave();
     });
     const go2 = html(`<div class="hint">${t('hint_photo')}</div>`);
-    const skip = setTimeout(() => { if (!looked) { spot.remove(); leave(); } }, 9000);
+    const skip = setTimeout(() => { if (!looked) leave(); }, 9000);
+    const onKey = (e) => { if (!looked && (e.code === 'Space' || e.code === 'Enter')) leave(); };
+    addEventListener('keydown', onKey);
+    spot.addEventListener('click', () => go2.remove());
+    let left = false;
     const leave = async () => {
-      clearTimeout(skip); go2.remove(); spot.remove();
+      if (left) return; left = true;
+      clearTimeout(skip); removeEventListener('keydown', onKey); go2.remove(); spot.remove();
       camera.lookAt(0.2, 1.3, 0);
       await say(t('h_leave1'), t('who_him'));
       await say(t('h_leave2'), t('who_him'));

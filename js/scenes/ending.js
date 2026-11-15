@@ -8,7 +8,7 @@ import { epicPhoto } from '../nasa.js';
 import { t } from '../text.js';
 
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-let room, robot, photo, tears = [], phase = 'sit';
+let room, robot, photo, tears = [], phase = 'sit', look = null;
 
 function photoOfUsTexture() {
   // polaroid: the human and the robot, side by side
@@ -49,7 +49,7 @@ export default {
       room.scene.add(tear); tears.push({ m: tear, t: Math.random(), side: i ? 1 : -1 });
     }
     const soft = new THREE.PointLight(0xc8b8ff, 5, 7, 1.5); soft.position.set(1.6, 2.4, 3.2); room.scene.add(soft);
-    camera.position.set(1.1, 1.9, 5.6); camera.lookAt(0.5, 0.9, 1.0);
+    camera.position.set(1.1, 1.9, 5.6); look = { x: 0.5, y: 0.9, z: 1.0 }; camera.lookAt(look.x, look.y, look.z);
     phase = 'credits';
     this.story();
   },
@@ -77,9 +77,10 @@ export default {
     await wait(5500);
     sfx('sob');
     await wait(5000);
-    // he looks up at the stars through the window
+    // he turns to the window and looks up at the stars; both stay in frame
     phase = 'look';
-    await tween(camera.position, { x: 2.2, y: 2.0, z: 4.6 }, 4000, easeInOut);
+    tween(look, { x: 0.6, y: 1.4, z: -1.5 }, 4500, easeInOut);
+    await tween(camera.position, { x: 2.6, y: 1.2, z: 5.6 }, 4500, easeInOut);
     await wait(5000);
     stopMusic(4);
     fade.style.transitionDuration = '3000ms'; fade.style.opacity = 1;
@@ -115,7 +116,13 @@ export default {
     idle(robot, tt * 0.6);
     const u = robot.userData;
     if (phase === 'sit' || phase === 'credits') { u.head.rotation.x = 0.35 + Math.sin(tt * 6) * 0.02; u.arms.forEach((a) => a && (a.rotation.x = -1.1)); }
-    if (phase === 'look') { u.head.rotation.x += (-0.3 - u.head.rotation.x) * 0.03; u.head.rotation.y = 0.5; robot.rotation.y += (0.5 - robot.rotation.y) * 0.02; }
+    if (phase === 'look') {
+      // window is at (2.6, 2.6, -3.5): turn toward it, head tilted up
+      u.head.rotation.x += (-0.4 - u.head.rotation.x) * 0.03; u.head.rotation.y *= 0.95;
+      robot.rotation.y += (2.6 - robot.rotation.y) * 0.02;
+      u.arms.forEach((a) => a && (a.rotation.x += (-0.5 - a.rotation.x) * 0.03));
+    }
+    camera.lookAt(look.x, look.y, look.z);
     for (const tr of tears) {
       tr.t += dt * 0.8; if (tr.t > 1) tr.t = 0;
       const eye = new THREE.Vector3(tr.side * 0.24, -0.08, 0.8); u.head.updateWorldMatrix(true, false); u.head.localToWorld(eye);

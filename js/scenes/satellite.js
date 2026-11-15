@@ -109,10 +109,12 @@ export default {
       return this.repair();
     }
     tries--; this.updateTries();
+    // the tether pulls him back while he talks, so he never stays off-screen
+    heroVel.set(0, 0, 0);
+    const back = tween(hero.position, { x: START.x, y: START.y, z: START.z }, 1800, easeInOut);
     if (result === 'bounce') { sfx('hit'); await say(t('bounce'), t('who_him')); }
     else { await say(t(power < 0.3 ? 'weak' : 'miss'), t('who_him')); }
-    heroVel.set(0, 0, 0);
-    await tween(hero.position, { x: START.x, y: START.y, z: START.z }, 1800, easeInOut);
+    await back;
     if (tries <= 0) {
       setHint('');
       const el = html(`<div class="end"><div class="title" style="opacity:1;animation:none;font-size:38px">${t('no_tries')}</div>

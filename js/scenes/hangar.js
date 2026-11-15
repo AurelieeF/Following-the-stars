@@ -5,7 +5,9 @@ import { cloneChar, idle, makeShip, glowSprite, MAT } from '../models.js';
 import { sfx } from '../audio.js';
 import { state } from '../state.js';
 import { PARTS, MISSIONS, evaluate } from '../missions.js';
-import { t } from '../text.js';
+import { t, getLang } from '../text.js';
+
+const num = (v) => v.toLocaleString(getLang() === 'fr' ? 'fr-CA' : 'en-US'); // 11,5 in French
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
@@ -91,7 +93,7 @@ export default {
       row.innerHTML = `<div class="name">${t(part.name)}</div><div class="row"></div>`;
       for (const o of part.opts) {
         const c = document.createElement('button'); c.className = 'chip';
-        c.innerHTML = `${t(o.label)}<small>${o.cost} k$ · ${o.mass} t</small>`;
+        c.innerHTML = `${t(o.label)}<small>${o.cost} k$ · ${num(o.mass)} t</small>`;
         c.onclick = () => { state.choice[key] = o.id; sfx('click'); refresh(); };
         c.dataset.key = key; c.dataset.id = o.id;
         row.lastChild.appendChild(c);
@@ -107,7 +109,7 @@ export default {
         panel.querySelector('.v-' + k).textContent = txt;
       };
       set('cost', e.cost, m.budget, `${e.cost} / ${m.budget} k$`, e.overBudget);
-      set('mass', e.mass, e.lift, `${e.mass} t / ${e.lift} t`, e.tooHeavy);
+      set('mass', e.mass, e.lift, `${num(e.mass)} t / ${e.lift} t`, e.tooHeavy);
       set('range', e.p.fuel.range, 3, e.shortRange ? t('range_short') : t('range_ok'), e.shortRange);
       panel.querySelector('.msg').textContent = e.overBudget ? t('over_budget') : '';
       return e;
@@ -130,7 +132,7 @@ export default {
       power = 0.15; shake = 0.05;
       await tween(shipRig.position, { y: 0 }, 1200, easeInOut);
       power = 0; shake = 0; hero.visible = true;
-      await say(t('too_heavy', { mass: e.mass, lift: e.lift }), t('who_pc'));
+      await say(t('too_heavy', { mass: num(e.mass), lift: e.lift }), t('who_pc'));
       Object.assign(cam, CAM_HOME);
       return this.showPanel(MISSIONS[state.mission]);
     }

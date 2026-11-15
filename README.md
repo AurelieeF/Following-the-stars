@@ -39,6 +39,7 @@ vendor/three/         Three.js r160 + the few add-ons used (MIT license)
 ## NASA data used
 - **EPIC (Earth Polychromatic Imaging Camera) on DSCOVR** — https://epic.gsfc.nasa.gov — the satellite photo in mission 1 and the "pick a date" Earth photo on the end screen.
 - **NASA Image and Video Library** — https://images.nasa.gov — the Apollo 8 *Earthrise* photo in mission 2.
+- `assets/earthrise.jpg` is a copy of that photo (AS08-14-2383, public domain): the NASA image servers don't send CORS headers, so the 3D polaroid needs a local copy. EPIC photos become textures through `api.nasa.gov` (`NASA_KEY` in `js/nasa.js`; `DEMO_KEY` is rate-limited — a free key from https://api.nasa.gov lifts the limit).
 
 ## Credits
 See `AI_USAGE.md` for what was made by hand and what was made with AI tools.
