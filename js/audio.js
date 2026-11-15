@@ -14,11 +14,14 @@ export function initAudio() {
   master = ctx.createGain();
   master.gain.value = 0.8;
   master.connect(ctx.destination);
-  for (const n of NAMES) {
-    fetch(`./assets/sounds/${n}.mp3`).then((r) => (r.ok ? r.arrayBuffer() : null))
-      .then((b) => b && ctx.decodeAudioData(b)).then((buf) => { if (buf) buffers[n] = buf; })
-      .catch(() => {});
-  }
+  // mp3 first; m4a / wav / ogg also work (e.g. straight from Windows Voice Recorder or a phone)
+  const load = async (n) => {
+    for (const ext of ['mp3', 'm4a', 'wav', 'ogg']) {
+      const r = await fetch(`./assets/sounds/${n}.${ext}`).catch(() => null);
+      if (r?.ok) { buffers[n] = await ctx.decodeAudioData(await r.arrayBuffer()); return; }
+    }
+  };
+  for (const n of NAMES) load(n).catch(() => {});
   const btn = document.getElementById('sound');
   btn.onclick = () => {
     muted = !muted;
