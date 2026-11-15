@@ -61,7 +61,7 @@ None.
 - Google Fonts: Cormorant Garamond, Nunito (SIL Open Font License)
 - NASA EPIC — https://epic.gsfc.nasa.gov · https://api.nasa.gov
 - NASA Image and Video Library — https://images.nasa.gov — AS08-14-2383 "Earthrise" (public domain)
-- Sounds: **[TO CONFIRM — source of each sound / music file, or "none"]**
+- Sounds: the crying is my own recording; all other sounds and the music are generated in code (Web Audio API)
 - Astronaut design and renders: Lily, in Blender
 
 ## Use of Artificial Intelligence
