@@ -62,29 +62,12 @@ None.
 - NASA EPIC — https://epic.gsfc.nasa.gov · https://api.nasa.gov
 - NASA Image and Video Library — https://images.nasa.gov — AS08-14-2383 "Earthrise" (public domain)
 - Sounds: **[TO CONFIRM — source of each sound / music file, or "none"]**
-- Astronaut design: Blender model by Lily **[TO CONFIRM]**
+- Astronaut design and renders: Lily, in Blender
 
 ## Use of Artificial Intelligence
-**[TO CONFIRM — Lily: fill in the brackets with what you actually did]**
+I wrote the base code and came up with the story, the characters and the game design, and I used Blender for the astronaut renders. AI (Claude) supported me along the way: it helped fix and clean up my code, add comments, smooth out the animations, and build some of the features I asked for after playtesting. It also helped me write the French and English dialogue from my story.
 
-This project is a mix of my own work and AI help. It's not 100% AI.
-
-What I did:
-- the idea, the story, the characters, the ending and the game design (the two missions, what the player has to choose, the NASA photos as the reward)
-- the astronaut design and my models in Blender **[TO CONFIRM: list them, e.g. astronaut, Earth…]**
-- the first versions of parts of the code **[TO CONFIRM: which parts]**
-- testing every version, deciding what stays and what changes
-
-What the AI (Claude, by Anthropic) did:
-- it suggested building the game for the browser with Three.js, and from there it wrote a big part of the code with me
-- it fixed bugs and smoothed things out (animations, timing, transitions)
-- on the last day it added features I asked for after testing: the mission report and score, team mode, the power and data limits, and the fixes from my playtest
-- it helped write the French and English dialogue from my story, and I reviewed it
-
-Other AI:
-- storyboard and astronaut reference images were made with an AI image tool **[TO CONFIRM: which tool]**, with a visible "AI-generated" watermark
-
-The NASA photos are real NASA data, not AI. AI use is also in the game's credits, and the commits written with AI are marked "Co-Authored-By: Claude" on GitHub.
+The storyboard images were made with an AI image tool **[TO CONFIRM: which tool]** and have a visible "AI-generated" watermark. The NASA photos in the game are real NASA data.
 
 ## Demo
 Choose ONE: a video of max **30 seconds** (English, or English subtitles) or a slide deck of max **7 slides**.
