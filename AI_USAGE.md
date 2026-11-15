@@ -25,7 +25,8 @@
 4. **14 novembre** — Écriture de l’histoire « Tu me trouveras dans les étoiles » (idée et direction de Lily ; options proposées par Claude). Storyboard en images IA par Lily.
 5. **14 novembre** — Programmation du jeu avec Claude : 7 scènes, construction du vaisseau (budget/masse/portée), esquive de météorites, sortie dans l’espace, alunissage, révélation, générique, scène du robot.
 6. **14 novembre** — Version française et anglaise.
-7. **[À compléter]** — Sons, voix, tests, refactorisation par Lily, déploiement sur Vercel, vidéo de démo.
+7. **15 novembre** — Playtest complet avec Claude, corrections (vraies photos NASA, équilibre), puis ajout de l’instrument, de l’antenne, de l’énergie, du mode équipe (1 à 4 joueurs) et du rapport de mission avec score, pour coller aux objectifs du défi. Code écrit avec Claude, choix validés par Lily.
+8. **[À compléter]** — Sons, voix, déploiement sur Vercel, vidéo de démo.
 
 ## Où l’IA est signalée dans le projet
 - Générique de fin du jeu : « Code écrit avec l’aide d’une IA (Claude) » et « Images du storyboard générées par IA ».

@@ -3,9 +3,10 @@ import { go, say, caption, html, hotspot, tween, wait, easeInOut, snapshot, show
 import { cloneChar, makeShip, makeSatellite, makeStars, makeEarth, MAT, glowSprite } from '../models.js';
 import { sfx, music } from '../audio.js';
 import { state } from '../state.js';
-import { evaluate } from '../missions.js';
+import { evaluate, DEV_CHOICE } from '../missions.js';
 import { epicPhoto } from '../nasa.js';
 import { t } from '../text.js';
+import { log, showReport } from '../report.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
@@ -53,7 +54,7 @@ export default {
   scene, camera, bloom: 0.7,
   async enter() {
     if (!built) build();
-    if (!state.build) state.build = evaluate({ engine: 'm', fuel: 2, shield: 1, power: 'bat', cable: 'long' }, 1);
+    if (!state.build) state.build = evaluate(DEV_CHOICE, 1);
     tries = state.build.tries; satOk = false; held = false; phase = 'intro';
     hero.position.copy(START); hero.rotation.set(0, 1.2, 0); arrow.visible = false;
     camera.position.set(-0.5, 2.2, 13); camera.lookAt(0.4, 0.2, 0);
@@ -100,7 +101,7 @@ export default {
     hero.rotation.z = angle - 0.2;
   },
   async resolveJump(result) {
-    phase = 'busy'; setHint('');
+    phase = 'busy'; setHint(''); log().jumps++;
     if (result === 'hit') {
       sfx('chime'); heroVel.set(0, 0, 0); held = true;
       removeEventListener('pointerdown', this._click); removeEventListener('keydown', this._key);
@@ -142,6 +143,8 @@ export default {
     state.photos.push({ ...(photo || { url: fallback, label: t('sat_photo') }), fallback });
     await say(t('h_sat1'), t('who_him'));
     await say(t('h_sat2'), t('who_him'));
+    ui.hud.remove();
+    await showReport(1);
     state.mission = 2;
     go((await import('./hangar.js')).default, { fadeOut: 1500 });
   },

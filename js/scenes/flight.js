@@ -3,8 +3,9 @@ import { go, say, html, wait, tween } from '../engine.js';
 import { makeShip, makeStars, makeEarth, makeMoon, glowSprite } from '../models.js';
 import { sfx } from '../audio.js';
 import { state } from '../state.js';
-import { MISSIONS, evaluate } from '../missions.js';
+import { MISSIONS, evaluate, DEV_CHOICE } from '../missions.js';
 import { t } from '../text.js';
+import { log } from '../report.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
@@ -68,15 +69,16 @@ async function event(kind) {
   if (kind === 'flare') {
     sfx('alarm'); flash.style.background = 'rgba(255,150,60,.45)'; flash.style.opacity = 1;
     setTimeout(() => (flash.style.opacity = 0), 900);
+    log().events.flare = b.shieldLevel === 0 ? 'hit' : 'ok';
     if (b.shieldLevel === 0) { run.lives--; updateHud(); sfx('hit'); toast(t('flare_hit')); }
     else toast(t('flare_ok'));
   } else if (kind === 'eclipse') {
-    run.dark = 1;
+    run.dark = 1; log().events.eclipse = b.battery ? 'ok' : 'bad';
     if (b.battery) toast(t('eclipse_ok'));
     else { run.sluggish = 6; toast(t('eclipse_bad')); }
     setTimeout(() => (run && (run.dark = 0)), 6000);
   } else if (kind === 'blackout') {
-    hud.style.opacity = 0.15; sfx('alarm');
+    hud.style.opacity = 0.15; sfx('alarm'); log().events.blackout = 'yes';
     toast(t('blackout'));
     setTimeout(() => hud && (hud.style.opacity = 1), 6000);
   }
@@ -91,7 +93,7 @@ export default {
   scene, camera, bloom: 0.8,
   async enter() {
     if (!built) build();
-    if (!state.build) state.build = evaluate({ engine: 'm', fuel: 2, shield: 1, power: 'bat', cable: 'long' }, state.mission);
+    if (!state.build) state.build = evaluate(DEV_CHOICE, state.mission);
     rocks.forEach((r) => scene.remove(r)); rocks = [];
     pos.set(0, 0); vel.set(0, 0);
     const m = MISSIONS[state.mission];
@@ -109,6 +111,7 @@ export default {
     run = { t: 0, len: m.flight.seconds, rate: m.flight.rate, lives: state.build.lives, maxLives: state.build.lives,
       boosts: state.build.boosts, dash: 0, events: m.flight.events.map((k, i) => ({ k, at: (i + 1) / (m.flight.events.length + 1), done: false })),
       spawn: 0, inv: 0, dark: 0, sluggish: 0, dim };
+    log().flights++; log().hits = 0; log().events = {};
     updateHud();
     setTimeout(() => hint.remove(), 6000);
   },
@@ -161,7 +164,7 @@ export default {
       r.rotation.x += r.userData.spin.x * dt; r.rotation.y += r.userData.spin.y * dt;
       if (run.inv <= 0 && r.position.z > -1.5 && r.position.z < 1.5 &&
           Math.hypot(r.position.x - pos.x, r.position.y - pos.y) < r.userData.r * 0.85 + 0.8) {
-        run.lives--; run.inv = 1.4; sfx('hit'); updateHud();
+        run.lives--; run.inv = 1.4; log().hits++; sfx('hit'); updateHud();
         flash.style.background = 'rgba(255,90,90,.35)'; flash.style.opacity = 1; setTimeout(() => (flash.style.opacity = 0), 250);
       }
       if (r.position.z > 12) { scene.remove(r); rocks.splice(i, 1); }
@@ -169,7 +172,7 @@ export default {
     for (const ev of run.events) if (!ev.done && prog >= ev.at) { ev.done = true; event(ev.k); }
 
     if (run.lives <= 0) { const r = run; run = null; return this.fail(r); }
-    if (prog >= 1) { run = null; return this.arrive(); }
+    if (prog >= 1) { log().livesLeft = run.lives; run = null; return this.arrive(); }
   },
   async fail() {
     sfx('hit');

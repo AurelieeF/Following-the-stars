@@ -4,10 +4,9 @@ import { go, say, caption, html, tween, wait, easeInOut } from '../engine.js';
 import { cloneChar, idle, makeShip, glowSprite, MAT } from '../models.js';
 import { sfx } from '../audio.js';
 import { state } from '../state.js';
-import { PARTS, MISSIONS, evaluate } from '../missions.js';
-import { t, getLang } from '../text.js';
-
-const num = (v) => v.toLocaleString(getLang() === 'fr' ? 'fr-CA' : 'en-US'); // 11,5 in French
+import { PARTS, MISSIONS, ROLES, START_CHOICE, evaluate, playerFor } from '../missions.js';
+import { log } from '../report.js';
+import { t, num } from '../text.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
@@ -68,7 +67,7 @@ export default {
     hero.visible = true;
     Object.assign(cam, CAM_HOME);
     const m = MISSIONS[state.mission];
-    if (!state.choice) state.choice = { engine: 's', fuel: 1, shield: 0, power: 'sun', cable: 'short' };
+    if (!state.choice) state.choice = { ...START_CHOICE };
     if (!state.seenHangar) {
       state.seenHangar = true;
       await wait(500);
@@ -78,46 +77,68 @@ export default {
     this.showPanel(m);
   },
   showPanel(m) {
+    const players = state.team || 1;
+    const ok = new Set();   // team mode: which players approved the current design
     panel = html(`<div class="panel">
       <h2>${t(m.title)}</h2><div class="sub">${t(m.goal)}</div>
+      <div class="team">${t('team')} ${[1, 2, 3, 4].map((n) => `<button class="chip" data-team="${n}">${n === 1 ? t('solo') : n}</button>`).join('')}</div>
       <div class="bar"><label><span>${t('budget')}</span><span class="v-cost"></span></label><div class="track"><div class="fill f-cost"></div></div></div>
       <div class="bar"><label><span>${t('mass')}</span><span class="v-mass"></span></label><div class="track"><div class="fill f-mass"></div></div></div>
+      <div class="bar"><label><span>${t('power')}</span><span class="v-power"></span></label><div class="track"><div class="fill f-power"></div></div></div>
+      <div class="bar"><label><span>${t('data')}</span><span class="v-data"></span></label><div class="track"><div class="fill f-data"></div></div></div>
       <div class="bar"><label><span>${t('range')}</span><span class="v-range"></span></label><div class="track"><div class="fill f-range"></div></div></div>
       <div class="opts"></div>
-      <button class="btn">${t('launch')}</button>
+      <div class="approvals"></div>
+      <button class="btn b-launch">${t('launch')}</button>
       <div class="msg"></div>
     </div>`);
+    panel.querySelectorAll('[data-team]').forEach((b) => {
+      b.classList.toggle('on', +b.dataset.team === players);
+      b.onclick = () => { state.team = +b.dataset.team; sfx('click'); panel.remove(); this.showPanel(m); };
+    });
     const opts = panel.querySelector('.opts');
     for (const [key, part] of Object.entries(PARTS)) {
       const row = document.createElement('div'); row.className = 'opt';
-      row.innerHTML = `<div class="name">${t(part.name)}</div><div class="row"></div>`;
+      const role = ROLES.find((r) => r.parts.includes(key));
+      const who = players > 1 ? `<span class="role">${t('player', { n: playerFor(key, players) })} · ${t('role_' + role.id)}</span>` : '';
+      row.innerHTML = `<div class="name">${t(part.name)}${who}</div><div class="why">${t('why_' + key)}</div><div class="row"></div>`;
       for (const o of part.opts) {
         const c = document.createElement('button'); c.className = 'chip';
         c.innerHTML = `${t(o.label)}<small>${o.cost} k$ · ${num(o.mass)} t</small>`;
-        c.onclick = () => { state.choice[key] = o.id; sfx('click'); refresh(); };
+        c.onclick = () => { state.choice[key] = o.id; ok.clear(); sfx('click'); refresh(); };   // any change needs a new team vote
         c.dataset.key = key; c.dataset.id = o.id;
         row.lastChild.appendChild(c);
       }
       opts.appendChild(row);
     }
+    const approvals = panel.querySelector('.approvals');
     const refresh = () => {
       const e = evaluate(state.choice, state.mission);
-      panel.querySelectorAll('.chip').forEach((c) => c.classList.toggle('on', String(state.choice[c.dataset.key]) === c.dataset.id));
-      const set = (k, val, max, txt, bad) => {
+      panel.querySelectorAll('.chip[data-key]').forEach((c) => c.classList.toggle('on', String(state.choice[c.dataset.key]) === c.dataset.id));
+      const set = (k, val, max, txt, bad, color = '#b9a3e8') => {
         panel.querySelector('.f-' + k).style.width = Math.min(100, (val / max) * 100) + '%';
-        panel.querySelector('.f-' + k).style.background = bad ? '#ff7a6b' : k === 'range' ? '#8ff3ff' : '#b9a3e8';
+        panel.querySelector('.f-' + k).style.background = bad ? '#ff7a6b' : color;
         panel.querySelector('.v-' + k).textContent = txt;
       };
       set('cost', e.cost, m.budget, `${e.cost} / ${m.budget} k$`, e.overBudget);
       set('mass', e.mass, e.lift, `${num(e.mass)} t / ${e.lift} t`, e.tooHeavy);
-      set('range', e.p.fuel.range, 3, e.shortRange ? t('range_short') : t('range_ok'), e.shortRange);
-      panel.querySelector('.msg').textContent = e.overBudget ? t('over_budget') : '';
+      set('power', e.draw, e.supply, `${e.draw} / ${e.supply}`, e.noPower, '#ffcf8a');
+      set('data', e.sent, 1, `${Math.round(e.sent * 100)} %`, e.sent < 1, '#8ff3ff');
+      set('range', e.p.fuel.range, 3, e.shortRange ? t('range_short') : t('range_ok'), e.shortRange, '#8ff3ff');
+      panel.querySelector('.msg').textContent = e.overBudget ? t('over_budget') : e.noPower ? t('no_power', { draw: e.draw, supply: e.supply }) : '';
+      approvals.innerHTML = players > 1 ? Array.from({ length: players }, (_, i) =>
+        `<button class="chip${ok.has(i + 1) ? ' on' : ''}" data-ok="${i + 1}">${t('approve', { who: t('player', { n: i + 1 }) })}</button>`).join('') : '';
+      approvals.querySelectorAll('[data-ok]').forEach((b) => (b.onclick = () => {
+        const n = +b.dataset.ok; ok.has(n) ? ok.delete(n) : ok.add(n); sfx('click'); refresh();
+      }));
       return e;
     };
     refresh();
-    panel.querySelector('.btn').onclick = () => {
+    panel.querySelector('.b-launch').onclick = () => {
       const e = refresh();
-      if (e.overBudget) { panel.querySelector('.msg').textContent = t('over_budget'); sfx('alarm'); return; }
+      const msg = panel.querySelector('.msg');
+      if (e.overBudget || e.noPower) { sfx('alarm'); return; }
+      if (players > 1 && ok.size < players) { msg.textContent = t('need_ok'); sfx('alarm'); return; }
       panel.remove();
       this.launch(e);
     };
@@ -132,6 +153,7 @@ export default {
       power = 0.15; shake = 0.05;
       await tween(shipRig.position, { y: 0 }, 1200, easeInOut);
       power = 0; shake = 0; hero.visible = true;
+      log().failedLaunches++;
       await say(t('too_heavy', { mass: num(e.mass), lift: e.lift }), t('who_pc'));
       Object.assign(cam, CAM_HOME);
       return this.showPanel(MISSIONS[state.mission]);
@@ -140,6 +162,7 @@ export default {
     if (e.shortRange) {
       await tween(shipRig.position, { y: 14 }, 3200, (x) => x * x);
       power = 0; shake = 0;
+      log().failedLaunches++;
       await say(t('short_range'), t('who_pc'));
       shipRig.position.y = 0; hero.visible = true;
       Object.assign(cam, CAM_HOME);

@@ -6,6 +6,7 @@ import { state } from '../state.js';
 import { buildRoom } from './home.js';
 import { epicPhoto } from '../nasa.js';
 import { t } from '../text.js';
+import { reportCard } from '../report.js';
 
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
 let room, robot, photo, tears = [], phase = 'sit', look = null;
@@ -89,8 +90,11 @@ export default {
     fade.style.opacity = 0;
   },
   endScreen() {
-    const el = html(`<div class="end" style="background:#05040c">
-      <div class="title" style="opacity:1;animation:rise 2s ease both;font-size:clamp(28px,4.5vw,48px)">${t('title')}</div>
+    const card = state.build ? reportCard(2) : '';   // score of the Moon mission (+ total with mission 1)
+    const total = Object.values(state.scores || {}).reduce((s, v) => s + v, 0);
+    const el = html(`<div class="end report-wrap" style="background:#05040c;justify-content:flex-start">
+      <div class="title" style="opacity:1;animation:rise 2s ease both;font-size:clamp(28px,4.5vw,48px);margin-top:4vh">${t('title')}</div>
+      ${card}${state.scores?.[1] ? `<div style="font-weight:800">${t('rep_total')} ${total} / 200</div>` : ''}
       <div style="max-width:560px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px">
         <div style="font-weight:800;margin-bottom:8px">${t('end_q')}</div>
         <div style="color:var(--dim);font-size:13px;margin-bottom:10px">${t('end_q_sub')}</div>

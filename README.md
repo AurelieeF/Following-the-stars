@@ -2,7 +2,7 @@
 
 **Team AuFX** — NASA Space Apps Challenge 2026, challenge *Space Mission Design Game*.
 
-A short, story-driven 3D browser game. The last human on Earth leaves his robot at home and takes his mother's ship into space. The player designs the ship (engine, fuel, shielding, power, tether) within a budget and mass limit, then lives with those choices during the flight, the spacewalk and the Moon landing. Each mission ends with a **real NASA photo**.
+A short, story-driven 3D browser game. The last human on Earth leaves his robot at home and takes his mother's ship into space. The player designs the ship (launcher, fuel, shielding, power, instrument, antenna, tether) within budget, mass and power limits — alone or as a team of up to 4 with roles — then lives with those choices during the flight, the spacewalk and the Moon landing. Each mission ends with a **real NASA photo**.
 
 ## Play
 Open `index.html` through any static web server (ES modules don't load from `file://`).
@@ -24,7 +24,8 @@ js/
   main.js             boot: loads the characters, starts the first scene
   engine.js           renderer, bloom, scene switching, dialogue/captions/photo UI
   text.js             THE SCRIPT — every line of text, French and English
-  missions.js         ship parts and mission data (costs, masses, needs)
+  missions.js         ship parts and mission data (costs, masses, power, data, team roles)
+  report.js           mission report: score + one line per decision explaining why it mattered
   models.js           procedural 3D models (astronaut, robot, ship, satellite, planets…)
   nasa.js             NASA EPIC + NASA Image Library API calls (with offline fallback)
   audio.js            sound effects + music (drop mp3 files in assets/sounds/ to replace)
