@@ -114,7 +114,7 @@ export default {
     crying = 1;
     // we hear him cry before we understand why
     let sobbing = true;
-    (async () => { await wait(900); while (sobbing) { sfx('sob'); await wait(2600 + Math.random() * 900); } })();
+    (async () => { await wait(900); while (sobbing) { sfx('cry'); await wait(2600 + Math.random() * 900); } })();
     await tween(camera.position, { x: SEAT.x - 0.6, z: SEAT.z + 6 }, 6000, easeInOut);
     await new Promise((res) => hotspot(t('hs_box'), box, camera, res));
     sobbing = false; crying = 0.4;

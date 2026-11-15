@@ -1,8 +1,8 @@
 // Sound system.
 // Drop your own files in assets/sounds/ with these names (mp3) and they replace
 // the built-in synthesized placeholders automatically:
-//   sob.mp3 (crying — record your own!), music.mp3, click.mp3, whoosh.mp3, hit.mp3, shutter.mp3, chime.mp3, launch.mp3, alarm.mp3, box.mp3
-const NAMES = ['sob', 'music', 'click', 'whoosh', 'hit', 'shutter', 'chime', 'launch', 'alarm', 'box', 'music_end'];
+//   cry.mp3 (him crying on the Moon — record your own!), sob.mp3 (the robot), music.mp3, click.mp3, whoosh.mp3, hit.mp3, shutter.mp3, chime.mp3, launch.mp3, alarm.mp3, box.mp3
+const NAMES = ['cry', 'sob', 'music', 'click', 'whoosh', 'hit', 'shutter', 'chime', 'launch', 'alarm', 'box', 'music_end'];
 
 let ctx = null, master = null, musicNode = null;
 let muted = false;
@@ -60,6 +60,22 @@ function noise(dur, vol = 0.2, from = 1200, to = 200) {
   src.connect(f).connect(g).connect(master); src.start(t);
 }
 
+/** Breath-like noise: band-passed, with its own attack and release (sniffs, shaky exhales). */
+function breath(dur, vol, freq, q = 1, attack = 0.03) {
+  const t = ctx.currentTime;
+  const len = Math.floor(ctx.sampleRate * dur);
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + attack);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(f).connect(g).connect(master); src.start(t);
+}
+
 const SYNTH = {
   click: () => tone(880, 0.08, 'triangle', 0.08),
   whoosh: () => noise(0.9, 0.25, 3000, 150),
@@ -69,7 +85,13 @@ const SYNTH = {
   launch: () => { noise(3.5, 0.5, 400, 60); tone(60, 3.5, 'sawtooth', 0.05, 30); },
   alarm: () => [0, 1, 2].forEach((i) => setTimeout(() => tone(740, 0.25, 'square', 0.04, 520), i * 380)),
   box: () => { tone(220, 0.5, 'triangle', 0.12, 180); noise(0.3, 0.1, 800, 200); },
-  // placeholder sob: shaky breaths + a broken, falling hum
+  // placeholder human crying: two quick nasal sniffs, then a shaky, broken exhale (no tones: tones sound robotic)
+  cry: () => {
+    breath(0.13, 0.22, 2600, 1.6, 0.09);
+    setTimeout(() => breath(0.18, 0.26, 2300, 1.6, 0.13), 190);
+    [0, 140, 300, 430].forEach((d, i) => setTimeout(() => breath(0.2 + i * 0.05, 0.07 - i * 0.012, 650 - i * 60, 0.7, 0.02), 620 + d));
+  },
+  // the robot's sob: shaky breaths + a broken, falling hum
   sob: () => {
     [0, 170, 330].forEach((d) => setTimeout(() => noise(0.16, 0.08, 1800, 700), d));
     setTimeout(() => { tone(330, 0.5, 'triangle', 0.035, 240); setTimeout(() => tone(300, 0.7, 'triangle', 0.03, 200), 380); }, 560);
