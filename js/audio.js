@@ -1,5 +1,5 @@
 // Sound system.
-// Drop your own files in assets/sounds/ with these names (mp3) and they replace
+// Drop your own files in assets/sounds/ with these names (mp3, m4a, wav or ogg) and they replace
 // the built-in synthesized placeholders automatically:
 //   cry.mp3 (him crying on the Moon — record your own!), sob.mp3 (the robot), music.mp3, click.mp3, whoosh.mp3, hit.mp3, shutter.mp3, chime.mp3, launch.mp3, alarm.mp3, box.mp3
 const NAMES = ['cry', 'sob', 'music', 'click', 'whoosh', 'hit', 'shutter', 'chime', 'launch', 'alarm', 'box', 'music_end'];
