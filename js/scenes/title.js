@@ -21,7 +21,7 @@ export default {
       const sun = new THREE.DirectionalLight(0xfff1e0, 2.8); sun.position.set(-10, 4, 3); scene.add(sun);
       const fill = new THREE.DirectionalLight(0x9c88ff, 0.35); fill.position.set(8, -2, 4); scene.add(fill);
       scene.add(new THREE.AmbientLight(0x2a2440, 0.6));
-      
+
       hero = cloneChar(state.astronaut);
       scene.add(hero);
     }
@@ -33,8 +33,10 @@ export default {
     const wrap = html(`<div class="title-wrap">
       <div class="title">${t('title')}</div>
       <div class="subtitle">${t('subtitle')}</div>
-      <button class="btn b-start">${t('start')}</button>
-      ${arcadeButtons()}
+      <div class="title-actions">
+        <button class="btn b-start">${t('start')}</button>
+        ${arcadeButtons()}
+      </div>
       <div class="langs"><button data-l="fr">FR</button><button data-l="en">EN</button></div>
     </div>`);
     wrap.querySelectorAll('.langs button').forEach((b) => {
