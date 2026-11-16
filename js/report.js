@@ -54,6 +54,7 @@ export function reportCard(mission) {
       <div class="r-score">${'★'.repeat(s.stars)}${'☆'.repeat(3 - s.stars)} <b>${s.total}</b>/100</div></div>
     <ul>${lines(mission).map(([i, txt]) => `<li><span>${i}</span>${txt}</li>`).join('')}</ul>
     <div class="r-pts">${t('rep_pts', s.pts)}</div>
+    <div class="r-fact">🔭 ${t('fact_' + mission)}</div>
     <div class="r-tip">${t('rep_tip')}</div>
   </div>`;
 }

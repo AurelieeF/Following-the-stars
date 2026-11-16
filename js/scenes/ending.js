@@ -7,6 +7,7 @@ import { buildRoom } from './home.js';
 import { epicPhoto } from '../nasa.js';
 import { t } from '../text.js';
 import { reportCard } from '../report.js';
+import { arcadeButtons, wireArcade } from '../arcade.js';
 
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
 let room, robot, photo, tears = [], phase = 'sit', look = null;
@@ -103,7 +104,9 @@ export default {
           <button class="btn b-date">${t('end_btn')}</button></div>
         <div class="msg"></div>
       </div>
+      ${arcadeButtons()}
       <button class="btn ghost b-replay">${t('replay')}</button></div>`);
+    wireArcade(el);
     const input = el.querySelector('input');
     input.max = new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10);
     el.querySelector('.b-date').onclick = async () => {

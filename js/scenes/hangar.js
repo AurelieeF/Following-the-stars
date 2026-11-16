@@ -73,6 +73,7 @@ export default {
       await wait(500);
       await caption(t('cap_hangar'), 3000);
       await say(t('h_hangar'), t('who_him'));
+      await say(t('brief'), t('who_pc'));
     }
     this.showPanel(m);
   },

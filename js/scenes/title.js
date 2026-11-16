@@ -4,6 +4,7 @@ import { makeStars, makeEarth, makeMoon, idle, glowSprite, cloneChar } from '../
 import { initAudio, music, sfx } from '../audio.js';
 import { state } from '../state.js';
 import { t, getLang, setLang } from '../text.js';
+import { arcadeButtons, wireArcade } from '../arcade.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 2000);
@@ -32,19 +33,21 @@ export default {
     const wrap = html(`<div class="title-wrap">
       <div class="title">${t('title')}</div>
       <div class="subtitle">${t('subtitle')}</div>
-      <button class="btn">${t('start')}</button>
+      <button class="btn b-start">${t('start')}</button>
+      ${arcadeButtons()}
       <div class="langs"><button data-l="fr">FR</button><button data-l="en">EN</button></div>
     </div>`);
     wrap.querySelectorAll('.langs button').forEach((b) => {
       b.classList.toggle('on', b.dataset.l === getLang());
       b.onclick = () => { setLang(b.dataset.l); wrap.remove(); this.enter(); };
     });
-    wrap.querySelector('.btn').onclick = async () => {
+    wireArcade(wrap);
+    wrap.querySelector('.b-start').onclick = async () => {
       initAudio(); sfx('click'); music('calm');
       try {
         const { default: next } = await import('./home.js');
         go(next);
-      } catch { wrap.querySelector('.btn').textContent = 'La suite arrive bientôt…'; }
+      } catch { wrap.querySelector('.b-start').textContent = '…'; }
     };
   },
   update(dt, t) {

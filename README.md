@@ -26,6 +26,7 @@ js/
   text.js             THE SCRIPT — every line of text, French and English
   missions.js         ship parts and mission data (costs, masses, power, data, team roles)
   report.js           mission report: score + one line per decision explaining why it mattered
+  arcade.js           after the story (and from the title): NASA photo gallery + memory game with a fact per pair
   models.js           procedural 3D models (astronaut, robot, ship, satellite, planets…)
   nasa.js             NASA EPIC + NASA Image Library API calls (with offline fallback)
   audio.js            sound effects + music (drop mp3 files in assets/sounds/ to replace)

@@ -34,7 +34,9 @@ After each mission you get a score out of 100 and a short report. Each line is o
 
 Up to 4 people can play together on one screen. Each player gets a role (mission lead, engineering, science, communications) and is in charge of some of the parts, and the ship can't launch until everyone agrees.
 
-Each part also has a one-line note explaining why it matters in real life. The game is in French and English.
+Each part also has a one-line note explaining why it matters in real life, and each mission report ends with a "Did you know?" fact. The game is in French and English.
+
+There's also a little arcade, on the title screen and after the ending: a gallery of famous NASA photos (Earthrise, the Blue Marble, Pale Blue Dot, Saturn, Jupiter, Mars, the Sun…) with your own photos from the journey, and a memory game where every pair you find teaches you one fact.
 
 **Why I made it**
 
