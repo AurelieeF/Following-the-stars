@@ -74,5 +74,5 @@ The NASA photos in the game are real NASA data.
 ## Demo
 Choose ONE: a video of max **30 seconds** (English, or English subtitles) or a slide deck of max **7 slides**.
 - Demo link: **[TO ADD]**
-- Playable game: **[TO ADD — Vercel URL]**
+- Playable game: https://following-the-stars.vercel.app/
 - Code: https://github.com/AurelieeF/Following-the-stars
