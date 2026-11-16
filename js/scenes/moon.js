@@ -116,6 +116,7 @@ export default {
     let sobbing = true;
     (async () => { await wait(900); while (sobbing) { sfx('cry'); await wait(4200 + Math.random() * 1200); } })();
     await tween(camera.position, { x: SEAT.x - 0.6, z: SEAT.z + 6 }, 6000, easeInOut);
+    await caption(t('cap_box'), 3400);
     await new Promise((res) => hotspot(t('hs_box'), box, camera, res));
     sobbing = false; crying = 0.4;
     sfx('box');

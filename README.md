@@ -2,7 +2,7 @@
 
 **Team AuFX** — NASA Space Apps Challenge 2026, challenge *Space Mission Design Game*.
 
-A short, story-driven 3D browser game. The last human on Earth leaves his robot at home and takes his mother's ship into space. The player designs the ship (launcher, fuel, shielding, power, instrument, antenna, tether) within budget, mass and power limits — alone or as a team of up to 4 with roles — then lives with those choices during the flight, the spacewalk and the Moon landing. Each mission ends with a **real NASA photo**.
+A short, story-driven 3D browser game. His mother was an astronaut; since she left for the stars, he lives alone with his robot. He takes the ship she left him into space, on the trip they always promised each other. The player designs the ship (launcher, fuel, shielding, power, instrument, antenna, tether) within budget, mass and power limits — alone or as a team of up to 4 with roles — then lives with those choices during the flight, the spacewalk and the Moon landing. Each mission ends with a **real NASA photo**.
 
 ## Play
 Open `index.html` through any static web server (ES modules don't load from `file://`).

@@ -12,7 +12,7 @@ You Will Find Me in the Stars
 Space Mission Design Game
 
 ## High-level summary (short)
-It's a small 3D game you play in the browser. The last person on Earth leaves his robot at home and takes his mom's old ship into space to bring back photos. You build the ship yourself, and you have to stay under budget, under the launcher's weight limit and within your power supply. Then you fly it and see what your choices did. There are two missions: fixing an old satellite, then landing on the Moon. Each one ends with a real NASA photo of Earth: today's Earth from DSCOVR/EPIC, and Apollo 8's *Earthrise*.
+It's a small 3D game you play in the browser. His mom was an astronaut, and since she left for the stars he lives alone with his little robot. She left him her ship, so he goes on the trip they always promised each other, to bring back photos of Earth from up there. You build the ship yourself, and you have to stay under budget, under the launcher's weight limit and within your power supply. Then you fly it and see what your choices did. There are two missions: fixing his mom's old satellite, then landing on the Moon, where she said they would walk together one day. Each one ends with a real NASA photo of Earth: today's Earth from DSCOVR/EPIC, and Apollo 8's *Earthrise*.
 
 ## Project details
 **What it does**
