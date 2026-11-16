@@ -94,6 +94,7 @@ export const TEXT = {
     fail_title: 'Vaisseau trop endommagé',
     fail_text: 'Plus de blindage = plus de chocs encaissés… mais plus de masse à soulever.',
     retry: 'Réessayer', retry_flight: 'Réessayer le vol', back_hangar: 'Retour au hangar',
+    easy_mode: '🌱 Mode facile (moins de météorites, +2 ❤️)',
     arrive1: 'Le satellite de Maman. Il clignote encore.',
     arrive2: 'La Lune. Elle est si proche…',
     // ---- scene 4: satellite
@@ -234,6 +235,7 @@ export const TEXT = {
     fail_title: 'Ship too damaged',
     fail_text: 'More shielding = more hits absorbed… but more mass to lift.',
     retry: 'Try again', retry_flight: 'Retry the flight', back_hangar: 'Back to the hangar',
+    easy_mode: '🌱 Easy mode (fewer meteoroids, +2 ❤️)',
     arrive1: 'Mom’s satellite. It’s still blinking.',
     arrive2: 'The Moon. It’s so close…',
     cap_eva: 'Spacewalk. He is tethered to the ship by a cable.',

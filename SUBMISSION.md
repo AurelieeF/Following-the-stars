@@ -69,7 +69,7 @@ None.
 ## Use of Artificial Intelligence
 I wrote the base code and came up with the story, the characters and the game design, and I used Blender for the astronaut renders. AI (Claude) supported me along the way: it helped fix and clean up my code, add comments, smooth out the animations, and build some of the features I asked for after playtesting. It also helped me write the French and English dialogue from my story.
 
-The storyboard images were made with an AI image tool **[TO CONFIRM: which tool]** and have a visible "AI-generated" watermark. The NASA photos in the game are real NASA data.
+The NASA photos in the game are real NASA data.
 
 ## Demo
 Choose ONE: a video of max **30 seconds** (English, or English subtitles) or a slide deck of max **7 slides**.

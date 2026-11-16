@@ -40,12 +40,12 @@ export const MISSIONS = {
   1: {
     title: 'm1_title', goal: 'm1_goal',
     budget: 100, rangeNeeded: 1,   // top science only fits if you fly with no shielding
-    flight: { seconds: 32, rate: 1.0, events: ['flare', 'eclipse'] },
+    flight: { seconds: 32, rate: 0.75, events: ['flare', 'eclipse'] },
   },
   2: {
     title: 'm2_title', goal: 'm2_goal',
     budget: 120, rangeNeeded: 2,   // same dilemma, further away: science or safety
-    flight: { seconds: 38, rate: 1.5, events: ['flare', 'blackout'] },
+    flight: { seconds: 38, rate: 1.15, events: ['flare', 'blackout'] },
   },
 };
 

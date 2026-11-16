@@ -168,7 +168,7 @@ export default {
       hero.position.addScaledVector(heroVel, dt);
       const center = sat.position.clone();
       const d = hero.position.clone().add(new THREE.Vector3(0, 0.8, 0)).distanceTo(center);
-      if (d < 1.6) { this.resolveJump(power > 0.82 ? 'bounce' : 'hit'); }
+      if (d < 2.1) { this.resolveJump(power > 0.82 ? 'bounce' : 'hit'); }
       else if (hero.position.distanceTo(START) > CABLE[state.build.p?.cable?.id || 'long'] * (power < 0.3 ? 0.45 : 1)) this.resolveJump('miss');
     }
     if (phase !== 'fly') hero.position.y += Math.sin(t * 1.1) * 0.002;

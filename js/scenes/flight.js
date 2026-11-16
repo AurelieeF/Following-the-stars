@@ -108,7 +108,8 @@ export default {
     const hint = html(`<div class="hint">${t('hint_fly')}</div>`);
     run = null;
     await wait(1200);
-    run = { t: 0, len: m.flight.seconds, rate: m.flight.rate, lives: state.build.lives, maxLives: state.build.lives,
+    const easy = state.easy ? 2 : 0;   // easy mode (offered after two crashes): fewer rocks, two extra lives
+    run = { t: 0, len: m.flight.seconds, rate: m.flight.rate * (easy ? 0.5 : 1), lives: state.build.lives + easy, maxLives: state.build.lives + easy,
       boosts: state.build.boosts, dash: 0, events: m.flight.events.map((k, i) => ({ k, at: (i + 1) / (m.flight.events.length + 1), done: false })),
       spawn: 0, inv: 0, dark: 0, sluggish: 0, dim };
     log().flights++; log().hits = 0; log().events = {};
@@ -163,7 +164,7 @@ export default {
       r.position.z += (55 + prog * 25) * dt;
       r.rotation.x += r.userData.spin.x * dt; r.rotation.y += r.userData.spin.y * dt;
       if (run.inv <= 0 && r.position.z > -1.5 && r.position.z < 1.5 &&
-          Math.hypot(r.position.x - pos.x, r.position.y - pos.y) < r.userData.r * 0.85 + 0.8) {
+          Math.hypot(r.position.x - pos.x, r.position.y - pos.y) < r.userData.r * 0.75 + 0.65) {
         run.lives--; run.inv = 1.4; log().hits++; sfx('hit'); updateHud();
         flash.style.background = 'rgba(255,90,90,.35)'; flash.style.opacity = 1; setTimeout(() => (flash.style.opacity = 0), 250);
       }
@@ -178,7 +179,9 @@ export default {
     sfx('hit');
     const el = html(`<div class="end"><div class="title" style="opacity:1;animation:none;font-size:40px">${t('fail_title')}</div>
       <div style="color:var(--dim);max-width:520px">${t('fail_text')}</div>
-      <div style="display:flex;gap:10px"><button class="btn b1">${t('retry_flight')}</button><button class="btn ghost b2">${t('back_hangar')}</button></div></div>`);
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn b1">${t('retry_flight')}</button><button class="btn ghost b2">${t('back_hangar')}</button>
+      ${log().flights >= 2 && !state.easy ? `<button class="btn ghost b3">${t('easy_mode')}</button>` : ''}</div></div>`);
+    el.querySelector('.b3')?.addEventListener('click', () => { state.easy = true; go(this); });
     el.querySelector('.b1').onclick = () => go(this);
     el.querySelector('.b2').onclick = async () => go((await import('./hangar.js')).default);
   },
