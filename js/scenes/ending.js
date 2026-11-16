@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { go, say, caption, html, tween, wait, easeInOut, showPhoto } from '../engine.js';
-import { cloneChar, idle, MAT } from '../models.js';
+import { cloneChar, idle, MAT, glowSprite } from '../models.js';
 import { sfx, music, stopMusic } from '../audio.js';
 import { state } from '../state.js';
 import { buildRoom } from './home.js';
@@ -83,12 +83,30 @@ export default {
     phase = 'look';
     tween(look, { x: 0.6, y: 1.4, z: -1.5 }, 4500, easeInOut);
     await tween(camera.position, { x: 2.6, y: 1.2, z: 5.6 }, 4500, easeInOut);
-    await wait(5000);
+    await wait(1800);
+    // a shooting star crosses the window, as if she answered; the robot opens its eyes and stops crying
+    await this.shootingStar();
+    tears.forEach((tr) => (tr.m.visible = false));
+    robot.userData.eyes.forEach((e) => tween(e.scale, { x: 1, y: 1 }, 700, easeInOut));
+    await tween(robot.position, { y: 0.18 }, 260, easeInOut); await tween(robot.position, { y: 0 }, 320, easeInOut);   // a little hop of joy
+    await wait(2000);
     stopMusic(4);
     fade.style.transitionDuration = '3000ms'; fade.style.opacity = 1;
     await wait(3200);
     this.endScreen();
     fade.style.opacity = 0;
+  },
+  shootingStar() {
+    // drawn on the window's sky, top-left to bottom-right, with a fading tail
+    const star = new THREE.Group(); star.position.set(-1.35, 0.95, 0.04); star.rotation.z = -0.38;
+    const glow = new THREE.Color(0xfff2dd).multiplyScalar(3);
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 8), new THREE.MeshBasicMaterial({ color: glow }));
+    const tail = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.022), new THREE.MeshBasicMaterial({ color: glow, transparent: true, opacity: 0.75 }));
+    tail.position.x = -0.45;
+    const halo = glowSprite(0xfff2dd, 0.45);
+    star.add(tail, head, halo); room.win.add(star);
+    sfx('chime');
+    return tween(star.position, { x: 1.35, y: -0.1 }, 1400, (x) => x).then(() => room.win.remove(star));
   },
   endScreen() {
     const card = state.build ? reportCard(2) : '';   // score of the Moon mission (+ total with mission 1)

@@ -53,7 +53,7 @@ export default {
     await wait(500);
     sfx('launch');
     await caption(t('cap_dist'), 2600);
-    const y0 = groundY(-3, -2) + 2.9;
+    const y0 = groundY(-3, -2) + 2.2;   // the fins rest on the ground (measured: lowest solid point is 2.2 below the ship's centre)
     await tween(ship.position, { y: y0 }, 5200, (x) => 1 - Math.pow(1 - x, 2.4));
     shipPower = 0; sfx('hit');
     await wait(700);
