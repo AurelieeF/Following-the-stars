@@ -1,4 +1,4 @@
-# Use of AI — You Will Find Me in the Stars (team AuFX, Lily)
+# Use of AI — You Will Find Me in the Stars (team AuFX, Aurélie)
 
 NASA Space Apps asks every team to say clearly where and how AI was used. Here is mine.
 

@@ -63,7 +63,7 @@ export default {
     const cr = html(`<div class="credits" style="z-index:3"><div class="roll">
       <p class="big">${t('title')}</p>
       <div><h3>${t('cr_game')}</h3><p>${t('cr_by')}</p></div>
-      <div><h3>${t('cr_story')}</h3><p>Lily</p></div>
+      <div><h3>${t('cr_story')}</h3><p>Aurélie</p></div>
       <div><p style="font-size:18px">${t('cr_challenge')}</p></div>
       <div><h3>${t('cr_data')}</h3><p style="font-size:18px">${t('cr_data_list')}</p></div>
       <div><h3>${t('cr_tools')}</h3><p style="font-size:18px">${t('cr_tools_list')}</p></div>

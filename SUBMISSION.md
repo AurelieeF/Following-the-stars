@@ -1,7 +1,7 @@
 # Space Apps 2026 — project submission text (English)
 
 Copy each section into the matching field of the Project Submission page.
-Lines marked **[TO CONFIRM]** must be checked by Lily before submitting.
+Lines marked **[TO CONFIRM]** must be checked by Aurélie before submitting.
 
 ---
 
@@ -64,7 +64,7 @@ None.
 - NASA EPIC — https://epic.gsfc.nasa.gov · https://api.nasa.gov
 - NASA Image and Video Library — https://images.nasa.gov — AS08-14-2383 "Earthrise" (public domain)
 - Sounds: the crying is my own recording; all other sounds and the music are generated in code (Web Audio API)
-- Astronaut design and renders: Lily, in Blender
+- Astronaut design and renders: Aurélie, in Blender
 
 ## Use of Artificial Intelligence
 I wrote the base code and came up with the story, the characters and the game design, and I used Blender for the astronaut renders. AI (Claude) supported me along the way: it helped fix and clean up my code, add comments, smooth out the animations, and build some of the features I asked for after playtesting. It also helped me write the French and English dialogue from my story.

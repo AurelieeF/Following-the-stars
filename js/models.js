@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
-/* ---------------- Materials (palette from Lily's storyboard) ---------------- */
+/* ---------------- Materials (palette from Aurélie's storyboard) ---------------- */
 export const MAT = {
   suit: new THREE.MeshStandardMaterial({ color: 0xe8e2da, roughness: 0.55, metalness: 0.05 }),
   suitDark: new THREE.MeshStandardMaterial({ color: 0xcfc7bd, roughness: 0.6 }),
@@ -13,7 +13,7 @@ export const MAT = {
   glowLav: new THREE.MeshBasicMaterial({ color: new THREE.Color(0xd6c6ff).multiplyScalar(2.0) }),
 };
 
-/* Superellipsoid: softly squared shapes (same formula as Lily's Blender script). */
+/* Superellipsoid: softly squared shapes (same formula as Aurélie's Blender script). */
 function sp(v, p) { return Math.sign(v) * Math.pow(Math.abs(v), p); }
 export function roundedForm(rx, ry, rz, e = 0.7, seg = 48, rings = 28) {
   const pos = [], idx = [];
@@ -44,7 +44,7 @@ function mesh(geo, mat, x = 0, y = 0, z = 0) {
 }
 
 /* ---------------- Astronaut (the human) ---------------- */
-// Procedural version of Lily's Blender astronaut. If assets/astronaut.glb exists,
+// Procedural version of Aurélie's Blender astronaut. If assets/astronaut.glb exists,
 // it is used instead (loadAstronaut).
 export function makeAstronaut() {
   const root = new THREE.Group();
