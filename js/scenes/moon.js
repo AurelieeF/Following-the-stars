@@ -86,16 +86,43 @@ export default {
     await tween(camera.position, { x: hero.position.x + 2, y: hero.position.y + 2.6, z: hero.position.z + 4 }, 1800, easeInOut);
     const look = new THREE.Vector3(); const lookAt = earth.position.clone();
     this._look = lookAt;
-    await wait(800);
+    await this.frameShot();
     const fallback = this._fallback;
     sfx('shutter');
     const photo = await pPromise;
     await showPhoto(photo, fallback, t('moon_photo'));
     state.photos.push({ ...(photo || { url: fallback, label: t('moon_photo') }), fallback });
     this._look = null;
+    await caption(t('fact_moon'), 6500);
     await say(t('h_two'), t('who_him'));
     await say(t('h_sit'), t('who_him'));
     this.reveal();
+  },
+  /** Mini-game: the view drifts; take the photo when the Earth is in the middle of the viewfinder. */
+  frameShot() {
+    return new Promise((done) => {
+      const el = html(`<div class="viewfinder"><i></i><i></i><i></i><i></i><b></b></div>`);
+      const tip = html(`<div class="hint">${t('frame_how')}</div>`);
+      const t0 = performance.now();
+      this._drift = { x: 0, y: 0 };
+      const step = () => {   // the hand isn't perfectly steady: the view drifts around the Earth
+        if (!this._drift) return;
+        const s = (performance.now() - t0) / 1000;
+        this._drift.x = Math.sin(s * 0.8) * 12; this._drift.y = Math.sin(s * 0.8) * 3;   // passes the centre about every 4 s
+        requestAnimationFrame(step);
+      };
+      step();
+      const shoot = (e) => {
+        if (e.type === 'keydown' && e.code !== 'Space') return;
+        if (e.type === 'pointerdown' && e.target.id !== 'c' && !e.target.closest?.('.viewfinder')) return;
+        e.preventDefault?.();
+        const off = Math.hypot(this._drift.x, this._drift.y);
+        if (off > 3.2) { sfx('click'); tip.textContent = t('frame_miss'); return; }
+        removeEventListener('keydown', shoot); removeEventListener('pointerdown', shoot);
+        this._drift = null; el.remove(); tip.remove(); done();
+      };
+      addEventListener('keydown', shoot); addEventListener('pointerdown', shoot);
+    });
   },
   async reveal() {
     phase = 'reveal';
@@ -197,7 +224,8 @@ export default {
       this._ring.rotation.y = t;
       if (hero.position.distanceTo(new THREE.Vector3(SPOT.x, hero.position.y, SPOT.z)) < 0.9) this.photo();
     } else if (phase === 'photo' && this._look) {
-      camera.lookAt(this._look);
+      const d = this._drift || { x: 0, y: 0 };
+      camera.lookAt(this._look.x + d.x, this._look.y + d.y, this._look.z);
     } else if (phase === 'reveal' && sitting) {
       const u = hero.userData;
       // sitting: head bowed when crying, shoulders trembling

@@ -55,7 +55,7 @@ export default {
   async enter() {
     if (!built) build();
     if (!state.build) state.build = evaluate(DEV_CHOICE, 1);
-    tries = state.build.tries; satOk = false; held = false; phase = 'intro';
+    tries = state.build.tries; satOk = false; held = false; phase = 'intro'; this._aim = null;
     hero.position.copy(START); hero.rotation.set(0, 1.2, 0); arrow.visible = false;
     camera.position.set(-0.5, 2.2, 13); camera.lookAt(0.4, 0.2, 0);
     photoPromise = epicPhoto(); // start loading the real photo now
@@ -133,8 +133,8 @@ export default {
     sfx('click'); await wait(300); sfx('click'); await wait(300); sfx('chime');
     satOk = true;
     await caption(t('cap_cam'), 1700);
-    // the satellite turns its camera toward Earth
-    await tween(sat.rotation, { x: 1.2, y: -0.3 }, 1500, easeInOut);
+    // the player turns the satellite's camera toward Earth
+    await this.pointCamera();
     const fallback = this._fallback;
     sfx('shutter');
     await wait(400);
@@ -148,8 +148,42 @@ export default {
     state.mission = 2;
     go((await import('./hangar.js')).default, { fadeOut: 1500 });
   },
+  /** Mini-game: steer the camera toward Earth with the slider or the arrow keys, then hold it steady. */
+  pointCamera() {
+    const TARGET = 69, OK = 8;   // degrees; 69° ≈ the camera looking straight at Earth
+    return new Promise((done) => {
+      const el = html(`<div class="mini">
+        <div class="mini-t">${t('aim_title')}</div><div class="mini-s">${t('aim_how')}</div>
+        <input type="range" id="aim-range" min="-40" max="110" value="0" aria-label="${t('aim_title')}">
+        <div class="mini-v"></div></div>`);
+      const range = el.querySelector('input'), label = el.querySelector('.mini-v');
+      const key = (e) => {
+        const d = { ArrowRight: 3, ArrowUp: 3, ArrowLeft: -3, ArrowDown: -3 }[e.code];
+        if (d) { e.preventDefault(); range.value = +range.value + d; show(); }
+      };
+      const show = () => {
+        this._aim = +range.value;
+        const off = Math.abs(this._aim - TARGET);
+        label.textContent = off < OK ? t('aim_ok') : t('aim_off', { n: Math.round(off) });
+        label.classList.toggle('ok', off < OK);
+      };
+      range.oninput = show; addEventListener('keydown', key); show(); range.focus();
+      let steady = 0;
+      const tick = setInterval(() => {
+        steady = Math.abs(this._aim - TARGET) < OK ? steady + 0.1 : 0;
+        if (steady < 0.9) return;
+        clearInterval(tick); removeEventListener('keydown', key); sfx('chime');
+        setTimeout(() => { el.remove(); done(); }, 400);
+      }, 100);
+    });
+  },
   update(dt, t) {
     stars.userData.update(t); earth.userData.update(t);
+    if (this._aim != null) {   // the satellite follows the slider (attitude control)
+      const a = THREE.MathUtils.degToRad(this._aim);
+      sat.rotation.x += (a - sat.rotation.x) * 0.12;
+      sat.rotation.y += (-0.3 * (this._aim / 69) - sat.rotation.y) * 0.12;
+    }
     sat.position.y = 0.5 + Math.sin(t * 0.5) * 0.9;
     sat.rotation.z = Math.sin(t * 0.3) * 0.1;
     sat.userData.update(t, satOk);
